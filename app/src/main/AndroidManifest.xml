@@ -3,6 +3,8 @@
     package="com.ola.playstudios">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.player.PlayerActivity" />
-        <activity android:name=".ui.history.HistoryActivity"></activity>
+        <activity android:name=".ui.history.HistoryActivity"/>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -66,7 +67,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.0.0"
 
     // android arch Room annotation processor
-    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    kapt "android.arch.persistence.room:compiler:1.0.0"
 
     // android arch Room rxJava2
     implementation "android.arch.persistence.room:rxjava2:1.0.0"

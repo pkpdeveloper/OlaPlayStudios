@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.ola.playstudios.R
 import com.ola.playstudios.data.SongData
+import com.ola.playstudios.db.room.DatabaseManager
 import kotterknife.bindView
 
 
@@ -56,6 +57,10 @@ class PlayerFragment : Fragment() {
                     mHandler, null)
             exoPlayer?.prepare(mediaSource)
             exoPlayerView.background
+
+            // add song to history
+            songData.timestamp = System.currentTimeMillis()
+            DatabaseManager.getDataBase(context)?.songDao()?.insert(songData)
         }
     }
 
