@@ -84,5 +84,6 @@ dependencies {
     // exo player
     implementation 'com.google.android.exoplayer:exoplayer:2.+'
 
-
+    //ion http library
+    implementation 'com.koushikdutta.ion:ion:2.2.0'
 }
