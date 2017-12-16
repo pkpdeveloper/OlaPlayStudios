@@ -86,4 +86,8 @@ dependencies {
 
     //ion http library
     implementation 'com.koushikdutta.ion:ion:2.2.0'
+
+    // dexter runtime permission check library
+    compile 'com.karumi:dexter:4.2.0'
+
 }
