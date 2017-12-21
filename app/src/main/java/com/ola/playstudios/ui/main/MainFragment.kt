@@ -1,16 +1,28 @@
 package com.ola.playstudios.ui.main
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
+import android.support.v7.widget.AppCompatEditText
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
+import android.widget.Toast
+import com.koushikdutta.async.future.Future
 import com.koushikdutta.ion.Ion
 import com.ola.playstudios.R
 import com.ola.playstudios.adapter.SongsRecycleViewAdapter
@@ -19,18 +31,6 @@ import com.ola.playstudios.listener.SongsItemClickListener
 import com.ola.playstudios.ui.player.PlayerActivity
 import kotterknife.bindView
 import java.io.File
-import android.widget.Toast
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.net.Uri
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v7.widget.AppCompatEditText
-import android.support.v7.widget.AppCompatImageView
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
-import android.view.inputmethod.InputMethodManager
-import android.webkit.MimeTypeMap
 
 
 /**
@@ -42,9 +42,10 @@ class MainFragment : Fragment(), MainView, SongsItemClickListener, TextWatcher {
 
     val songsRecycleView: RecyclerView by bindView(R.id.songsRecycleView)
     val progressBar: ProgressBar by bindView(R.id.progressBar)
-    val downloadProgressBar: ProgressBar by bindView(R.id.downloadProgressBar)
     val searchEditText: AppCompatEditText by bindView(R.id.searchEditText)
     val inputClearImageView: AppCompatImageView by bindView(R.id.inputClearImageView)
+    private var downloadDialog: AlertDialog? = null
+    private var downloadTask: Future<File>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
@@ -99,21 +100,32 @@ class MainFragment : Fragment(), MainView, SongsItemClickListener, TextWatcher {
         startActivity(intent)
     }
 
+
     override fun onDownloadButtonClicked(songData: SongData?) {
+        val downloadView = layoutInflater.inflate(R.layout.custom_download_view, null, false)
+        val downloadProgressBar: ProgressBar = downloadView.findViewById(R.id.downloadProgressBar)
+        val downloadDialogBuilder = AlertDialog.Builder(context)
+        downloadDialogBuilder.setNegativeButton("Cancel", { dialogInterface, k ->
+            dialogInterface.dismiss()
+            if (downloadTask != null) {
+                downloadTask?.cancel()
+            }
+            Toast.makeText(context, "Download canceled!", Toast.LENGTH_LONG).show()
+        })
+        downloadDialogBuilder.setView(downloadView)
         val targetFile = getLocalFile(songData?.song)
-        downloadProgressBar.isIndeterminate = true
-        downloadProgressBar.visibility = View.VISIBLE
-        Ion.with(this)
+        downloadDialog = downloadDialogBuilder.create()
+        downloadDialog?.setCancelable(false)
+        downloadDialog?.setCanceledOnTouchOutside(false)
+        downloadDialog?.show()
+        downloadTask = Ion.with(this)
                 .load(songData?.url)
-                .progress { downloaded, total ->
-                    val progress = downloaded / total * 100.0f
-                    downloadProgressBar.setProgress(progress.toInt())
-                }
+                .followRedirect(true)
+                .progressBar(downloadProgressBar)
                 .write(targetFile)
                 .setCallback({ e, downloadedFile ->
-
-                    if (downloadedFile.exists()) {
-                        downloadProgressBar.visibility = View.INVISIBLE
+                    downloadDialog?.dismiss()
+                    if (downloadedFile != null && downloadedFile.exists()) {
                         showAlert(downloadedFile)
                     }
 

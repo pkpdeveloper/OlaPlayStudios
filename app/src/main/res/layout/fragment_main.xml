@@ -21,10 +21,10 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:src="@drawable/ic_close"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/searchEditText"
         app:layout_constraintRight_toRightOf="@id/searchEditText"
-        app:layout_constraintTop_toTopOf="@id/searchEditText"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toTopOf="@id/searchEditText" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/songsRecycleView"
@@ -45,13 +45,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/downloadProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchEditText" />
+
 </android.support.constraint.ConstraintLayout>
