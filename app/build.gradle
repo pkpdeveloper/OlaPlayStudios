@@ -72,11 +72,9 @@ dependencies {
     // android arch Room rxJava2
     implementation "android.arch.persistence.room:rxjava2:1.0.0"
 
-    // Glide image loader library
-    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    //Volley
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
 
-    // Glide image loader library annotationProcessor
-    kapt 'com.github.bumptech.glide:compiler:4.4.0'
 
     // Jackson kotlin extension
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2'
